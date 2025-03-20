@@ -106,10 +106,11 @@ def generate_transaction():
     return transaction
 
 # Generate 10,000 transactions
-num_transactions = 10000
+num_transactions = 2
 transactions = [generate_transaction() for _ in range(num_transactions)]
 
 # Save transactions to a JSON file
-with open("transactions.json", "w", encoding="utf-8") as f:
-    json.dump(transactions, f, ensure_ascii=False, indent=4)
+with open("../data/source/transactions.json", "w", encoding="utf-8") as f:
+    for transaction in transactions:
+        f.write(json.dumps(transaction, ensure_ascii=False) + "\n")
 

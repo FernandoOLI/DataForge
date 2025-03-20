@@ -1,7 +1,5 @@
 version: '3.8'
-
 services:
-  # MongoDB
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -15,7 +13,6 @@ services:
     networks:
       - mongo-compose-network
 
-#validar como seria o mongo express e o pgadmin
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
@@ -27,37 +24,42 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongodb:27017
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
-      ME_CONFIG_MONGODB_PORT: 27017
-    links:
+    depends_on:
       - mongodb
     networks:
       - mongo-compose-network
 
   jenkins:
-    image: jenkins/jenkins:lts  # Usa a versão LTS (Long Term Support) do Jenkins
+    image: jenkins/jenkins:lts
     container_name: jenkins
     ports:
-      - "8080:8080"  # Porta para a interface web do Jenkins
-      - "50000:50000"  # Porta para comunicação com agentes (nodes) do Jenkins
+      - "8083:8083"
+      - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
     environment:
-      - JAVA_OPTS=-Dhudson.footerURL=http://localhost:8080
+      - JAVA_OPTS=-Dhudson.footerURL=http://localhost:8083
     restart: unless-stopped
 
-  # PostgreSQL
   postgres:
-    image: postgres:latest
+    image: postgres:13
     container_name: postgres
     ports:
-      - "15432:5432"
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      retries: 5
+      start_period: 5s
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "postgres"
-    restart: unless-stopped
+    restart: always
+    networks:
+      - postgres-compose-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -75,7 +77,6 @@ services:
       - postgres
     restart: unless-stopped
 
-  # Grafana (Visualização de métricas)
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -89,7 +90,6 @@ services:
     depends_on:
       - prometheus
 
-  # Prometheus (Coleta de métricas)
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -101,7 +101,6 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
 
-  # Zookeeper (necessário para o Kafka)
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -111,7 +110,6 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  # Kafka
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka
@@ -124,13 +122,14 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+
   metabase:
     image: metabase/metabase:latest
     container_name: metabase
     ports:
-      - "3000:3000"  # Porta para a interface web do Metabase
+      - "3000:3000"
     environment:
-      MB_DB_TYPE: postgres  # Tipo de banco de dados para o Metabase (opcional)
+      MB_DB_TYPE: postgres
       MB_DB_DBNAME: metabase
       MB_DB_PORT: 5432
       MB_DB_USER: postgres
@@ -149,9 +148,10 @@ networks:
 volumes:
   mongodb_data:
   postgres_data:
+  postgres-db-volume:
   jenkins_home:
   pgadmin_data:
   grafana_data:
   prometheus_data:
-  pentaho_data:
   metabase_data:
+  airflow_data:
