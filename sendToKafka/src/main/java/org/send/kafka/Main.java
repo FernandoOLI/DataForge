@@ -1,4 +1,4 @@
-package org.example;
+package org.send.kafka;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -7,14 +7,16 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
-import org.example.kafka.KafkaProducerConfig;
+import org.send.kafka.kafka.KafkaProducerConfig;
+
+import java.util.UUID;
+import java.util.Iterator;
 
 public class Main {
     public static void main(String[] args) {
-        // Initialize Spark Session
         SparkSession spark = SparkSession.builder()
                 .appName("Send DataFrame to Kafka")
-                .master("local[*]") // For local testing
+                .master("local[*]") // Para testes locais
                 .getOrCreate();
 
         StructType schema = new StructType()
@@ -51,15 +53,19 @@ public class Main {
         df.printSchema();
         df.show(false);
 
-        KafkaProducer<String, String> producer = KafkaProducerConfig.createProducer();
         String topic = "topic-test";
 
-        df.toJSON().foreach(rowJson -> {
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, null, rowJson);
-            producer.send(record);
-        });
+        df.toJSON().foreachPartition((Iterator<String> rows) -> {
+            KafkaProducer<String, String> producer = KafkaProducerConfig.createProducer();
 
-        producer.close();
+            while (rows.hasNext()) {
+                String rowJson = rows.next();
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, UUID.randomUUID().toString(), rowJson);
+                producer.send(record);
+            }
+
+            producer.close();
+        });
 
         spark.stop();
     }
