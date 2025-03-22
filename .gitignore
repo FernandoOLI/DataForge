@@ -8,6 +8,7 @@ raw/.idea
 raw/.bsp
 databricks/.venv
 .idea/
+.bsp/
 project/
 target/
 data/
