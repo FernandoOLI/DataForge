@@ -1,4 +1,4 @@
-package org.send.kafka.kafka;
+package org.example.kafka;
 import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.util.Properties;

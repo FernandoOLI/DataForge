@@ -3,7 +3,7 @@ ThisBuild / scalaVersion := "2.12.15"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "refined",
+    name := "raw",
     resolvers ++= Seq(
       "Maven Central" at "https://repo1.maven.org/maven2/",
       "Delta Lake IO" at "https://repo.delta.io/",

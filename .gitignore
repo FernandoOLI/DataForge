@@ -10,3 +10,4 @@ databricks/.venv
 .idea/
 project/
 target/
+data/

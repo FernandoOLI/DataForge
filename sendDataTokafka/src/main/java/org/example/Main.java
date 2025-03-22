@@ -1,4 +1,4 @@
-package org.send.kafka;
+package org.example;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -7,7 +7,7 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
-import org.send.kafka.kafka.KafkaProducerConfig;
+import org.example.kafka.KafkaProducerConfig;
 
 import java.util.UUID;
 import java.util.Iterator;
@@ -15,8 +15,8 @@ import java.util.Iterator;
 public class Main {
     public static void main(String[] args) {
         SparkSession spark = SparkSession.builder()
-                .appName("Send DataFrame to Kafka")
-                .master("local[*]") // Para testes locais
+                .appName("Send Json to Kafka")
+                .master("local[*]")
                 .getOrCreate();
 
         StructType schema = new StructType()
@@ -48,7 +48,8 @@ public class Main {
                 .add("total_value", DataTypes.DoubleType);
 
         Dataset<Row> df = spark.read()
-                .schema(schema).json("./data/source/transactions.json");
+                .schema(schema).json("./data/source/transactions.json")
+                .limit(1);
 
         df.printSchema();
         df.show(false);
