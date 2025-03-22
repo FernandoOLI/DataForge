@@ -2,6 +2,9 @@ refined/project/
 refined/target/
 refined/.idea
 refined/.bsp
-raw/target
+raw/project/
+raw/target/
+raw/.idea
+raw/.bsp
 databricks/.venv
 .idea/
