@@ -16,6 +16,8 @@ object Main {
     val df = spark.read.format("delta").load(deltaPath)
 
     df.show()
+    //Todo - include validation to upsert, limit date to last 30 days
+    // todo - in another project create clean data routine
 
     df.write
       .format("mongodb")
