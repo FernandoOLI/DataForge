@@ -270,6 +270,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -280,22 +281,6 @@ services:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - mongo-compose-network
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin
-    ports:
-      - "16543:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "postgres"
-      PGADMIN_DEFAULT_PASSWORD: "postgres"
-    networks:
-      - postgres-compose-network
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    depends_on:
-      - postgres
-    restart: unless-stopped
 
   grafana:
     image: grafana/grafana:latest
@@ -359,26 +344,6 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
-
-  airflow:
-    image: apache/airflow:2.5.1
-    container_name: airflow
-    environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://postgres:postgres@postgres:5432/postgres
-      - AIRFLOW__CORE__FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFfgoWFxC6h1fMw4E=
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=true
-      - AIRFLOW__CORE__LOAD_EXAMPLES=false
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    networks:
-      - postgres-compose-network
 
 networks:
   mongo-compose-network:
