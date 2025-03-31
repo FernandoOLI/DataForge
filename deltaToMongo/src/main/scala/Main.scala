@@ -19,6 +19,7 @@ object Main {
     //Todo - include validation to upsert, limit date to last 30 days
     // todo - in another project create clean data routine
 
+
     df.write
       .format("mongodb")
       .mode("append")
