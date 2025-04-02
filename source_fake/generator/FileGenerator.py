@@ -2,9 +2,6 @@ import json
 from pathlib import Path
 from typing import List, Dict, Any
 
-from generator.DataGenerator import DataGenerator
-
-
 class FileGenerator:
     """Handles writing data to JSON files with proper error handling and file management"""
 
