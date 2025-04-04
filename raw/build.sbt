@@ -1,6 +1,8 @@
+import sbt.Keys.testFrameworks
+
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "2.12.15"
-
+testFrameworks += new TestFramework("org.scalatest.tools.Framework")
 lazy val root = (project in file("."))
   .settings(
     name := "raw",
@@ -13,6 +15,12 @@ lazy val root = (project in file("."))
       "org.apache.spark" %% "spark-core" % "3.5.0",
       "org.apache.spark" %% "spark-sql" % "3.5.0",
       "org.apache.spark" %% "spark-sql-kafka-0-10" % "3.5.0",
-      "io.delta" %% "delta-spark" % "3.2.0"
+      "io.delta" %% "delta-spark" % "3.2.0",
+      "org.scalatest" %% "scalatest" % "3.2.15" % Test,
+      "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % Test,
+      "org.apache.spark" %% "spark-sql" % "3.4.0" % Test classifier "tests",
+      "org.apache.spark" %% "spark-catalyst" % "3.4.0" % Test classifier "tests",
+      "org.apache.spark" %% "spark-core" % "3.4.0" % Test classifier "tests",
+      "org.mockito" %% "mockito-scala-scalatest" % "1.17.12" % Test
     )
   )
