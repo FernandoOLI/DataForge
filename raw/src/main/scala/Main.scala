@@ -3,7 +3,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.{StreamingQuery, Trigger}
 
 class KafkaDeltaPipeline(
-                          kafkaBootstrapServers: String = "192.168.15.6:9092",
+                          kafkaBootstrapServers: String = "0.0.0.0:9092",
                           kafkaTopic: String = "topic-test",
                           deltaOutputPath: String = "./data/raw/"
                         ) {
