@@ -10,7 +10,7 @@ public class Main {
         DataReader dataReader = new DataReader(sparkConfig.getSparkSession());
         KafkaProducerService producerService = new KafkaProducerService();
         // if limit = 0, will send all data in file
-        dataReader.readAndShowData("./data/source/transactions.json", 0);
+        dataReader.readAndShowData("./data/source/transactions.json", 20);
         producerService.sendToKafka(dataReader.getData(), "topic-test");
 
         sparkConfig.stopSpark();
