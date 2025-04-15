@@ -11,7 +11,7 @@ def main():
     FileGenerator.write_transactions(
         transactions=[t.to_dict() for t in transactions],
         output_dir="../data/source",
-        filename="transactions.json")
+        filename="transactionss.json")
 
 if __name__ == "__main__":
     main()

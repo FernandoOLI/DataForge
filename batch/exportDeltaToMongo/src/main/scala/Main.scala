@@ -16,15 +16,20 @@ object Main {
     val df = spark.read.format("delta").load(deltaPath)
 
     df.show()
-    //Todo - include validation to upsert, limit date to last 30 days
     // todo - in another project create clean data routine
 
+    import org.apache.spark.sql.functions._
+    import java.time.LocalDate
 
-    df.write
+    val thirtyDaysAgo = LocalDate.now().minusDays(30).toString
+    val filteredDF = df.filter(col("created_at") >= lit(thirtyDaysAgo))
+    filteredDF.write
       .format("mongodb")
       .mode("append")
       .option("database", "refined")
       .option("collection", "teste")
+      .option("replaceDocument", "false")
+      .option("idFieldList", "id")
       .save()
 
     spark.stop()
