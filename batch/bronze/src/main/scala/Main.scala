@@ -2,7 +2,6 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.{StreamingQuery, Trigger}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-//test
 class KafkaDeltaPipeline(
                           kafkaBootstrapServers: String = "0.0.0.0:9092",
                           kafkaTopic: String = "topic-test",
