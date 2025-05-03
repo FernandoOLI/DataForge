@@ -63,7 +63,7 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload \
-              --container-name $CONTAINER_NAME \
+              --container-name dataforgecontainer\
               --file "${{ steps.findjar.outputs.jar_path }}" \
               --name "bronze-${GITHUB_SHA::7}.jar" \
               --connection-string "$AZURE_STORAGE_CONNECTION"
