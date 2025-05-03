@@ -24,3 +24,11 @@ lazy val root = (project in file("."))
       "org.mockito" %% "mockito-scala-scalatest" % "1.17.12" % Test
     )
   )
+
+import sbtassembly.AssemblyPlugin.autoImport._
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.discard
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
