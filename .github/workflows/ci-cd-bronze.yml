@@ -5,7 +5,7 @@ on:
     paths:
       - 'batch/bronze/**'
     branches:
-      - main
+      - master
 
 jobs:
   build-test-upload:
