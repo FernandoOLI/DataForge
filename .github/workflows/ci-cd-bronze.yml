@@ -66,4 +66,4 @@ jobs:
               --container-name $CONTAINER_NAME \
               --file "${{ steps.findjar.outputs.jar_path }}" \
               --name "bronze-${GITHUB_SHA::7}.jar" \
-              --connection-string "$AZURE_STORAGE_CONNECTION
+              --connection-string "$AZURE_STORAGE_CONNECTION"
