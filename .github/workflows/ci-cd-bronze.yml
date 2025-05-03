@@ -1,0 +1,61 @@
+name: CI/CD - Batch Bronze
+
+on:
+  push:
+    paths:
+      - 'batch/bronze/**'
+    branches:
+      - main
+
+jobs:
+  build-test-upload:
+    name: Build, Test, and Upload Bronze JAR
+    runs-on: ubuntu-latest
+
+    env:
+      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      CONTAINER_NAME: meu-container
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache SBT dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+          key: sbt-${{ runner.os }}-${{ hashFiles('**/build.sbt') }}
+          restore-keys: |
+            sbt-${{ runner.os }}-
+
+      - name: Run tests
+        working-directory: batch/bronze
+        run: sbt test
+
+      - name: Package JAR
+        working-directory: batch/bronze
+        run: sbt assembly
+
+      - name: Find JAR file
+        id: findjar
+        run: |
+          JAR_PATH=$(find batch/bronze/target -name "*.jar" | head -n 1)
+          echo "jar_path=$JAR_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload \
+              --container-name $CONTAINER_NAME \
+              --file "${{ steps.findjar.outputs.jar_path }}" \
+              --name "bronze-${GITHUB_SHA::7}.jar" \
+              --connection-string "$AZURE_STORAGE_CONNECTION
