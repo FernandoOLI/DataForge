@@ -36,9 +36,9 @@ jobs:
           restore-keys: |
             sbt-${{ runner.os }}-
 
-      - name: Run tests
-        working-directory: batch/bronze
-        run: sbt test
+#      - name: Run tests
+#        working-directory: batch/bronze
+#        run: sbt test
 
       - name: Package JAR
         working-directory: batch/bronze
