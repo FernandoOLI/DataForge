@@ -36,6 +36,14 @@ jobs:
           restore-keys: |
             sbt-${{ runner.os }}-
 
+      - name: Install SBT
+        run: |
+          echo "Installing SBT..."
+          curl -L -o sbt.deb https://repo.scala-sbt.org/scalasbt/debian/sbt-1.9.7.deb
+          sudo dpkg -i sbt.deb
+          sudo apt-get update
+          sudo apt-get install -y sbt
+
 #      - name: Run tests
 #        working-directory: batch/bronze
 #        run: sbt test
