@@ -11,6 +11,11 @@ setup(
     version='0.1.0',
     packages=find_packages(),
     install_requires=read_requirements(),
+    entry_points={
+        'console_scripts': [
+            'source-fake = source_fake.main:main'
+        ]
+    },
     author='Fernando',
     description='Pacote para ingestão fake de dados no DataForge',
     python_requires='>=3.7',
