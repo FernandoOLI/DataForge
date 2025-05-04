@@ -14,7 +14,7 @@ jobs:
 
     env:
       AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-      CONTAINER_NAME: dataforgecontainer
+      CONTAINER_NAME: projectfile
 
     steps:
       - name: Checkout repository
@@ -63,7 +63,7 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload \
-              --container-name dataforgecontainer\
+              --container-name $CONTAINER_NAME \
               --file "${{ steps.findjar.outputs.jar_path }}" \
               --name "bronze-${GITHUB_SHA::7}.jar" \
               --connection-string "$AZURE_STORAGE_CONNECTION"
