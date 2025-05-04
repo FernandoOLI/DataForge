@@ -37,14 +37,15 @@ jobs:
       - name: Package project
         run: |
           cd source_fake
-          zip -r ../source_fake-${{ github.sha }}.zip .
+          python setup.py bdist_wheel
+          mv dist/*.whl ../source_fake-${{ github.sha }}.whl
 
       - name: Upload to Azure Blob Storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az storage blob upload \
-            --container-name $CONTAINER_NAME  \
-            --file dist/source_fake-0.1.0-py3-none-any.whl \
-            --name libs/source_fake-0.1.0-py3-none-any.whl \
-            --connection-string "AZURE_STORAGE_CONNECTION_STRING"
+              --container-name $CONTAINER_NAME \
+              --file "source_fake-${{ github.sha }}.whl" \
+              --name "source_fake-${{ github.sha }}.whl" \
+              --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
