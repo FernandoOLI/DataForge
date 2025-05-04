@@ -1,0 +1,50 @@
+name: CI/CD - Source Fake (Python)
+
+on:
+  push:
+    paths:
+      - 'source_fake/**'
+    branches:
+      - master
+
+jobs:
+  build-upload:
+    name: Build and Upload Python Artifact
+    runs-on: ubuntu-latest
+
+    env:
+      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      CONTAINER_NAME: projectfile
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r source_fake/requirements.txt
+
+      - name: Run tests (if any)
+        run: |
+          echo "⚠️ Adicione testes se houver"
+          # Exemplo: pytest source_fake/tests
+
+      - name: Package project
+        run: |
+          cd source_fake
+          zip -r ../source_fake-${{ github.sha }}.zip .
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload \
+              --container-name $CONTAINER_NAME \
+              --file "source_fake-${{ github.sha }}.zip" \
+              --name "source_fake-${{ github.sha }}.zip" \
+              --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
