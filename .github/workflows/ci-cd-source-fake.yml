@@ -44,7 +44,7 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload \
-              --container-name $CONTAINER_NAME \
-              --file "source_fake-${{ github.sha }}.zip" \
-              --name "source_fake-${{ github.sha }}.zip" \
-              --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+            --container-name $CONTAINER_NAME  \
+            --file dist/source_fake-0.1.0-py3-none-any.whl \
+            --name libs/source_fake-0.1.0-py3-none-any.whl \
+            --connection-string "AZURE_STORAGE_CONNECTION_STRING"
