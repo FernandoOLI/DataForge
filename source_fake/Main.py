@@ -1,4 +1,3 @@
-# Usage example:
 from generator.DataGenerator import DataGenerator
 from generator.FileGenerator import FileGenerator
 
