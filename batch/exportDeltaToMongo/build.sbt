@@ -16,3 +16,12 @@ lazy val root = (project in file("."))
       "io.delta" %% "delta-core" % "2.2.0"
     )
   )
+
+import sbtassembly.AssemblyPlugin.autoImport._
+
+assembly / mainClass := Some("Main") // substitua "Main" se for outro nome
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
