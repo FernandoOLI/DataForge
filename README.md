@@ -12,3 +12,4 @@ install mongoCompass local
 create airflow dags and simple config do databricks asset bundle
 
 Ctrl + Alt + Shift + S to import module
+test
