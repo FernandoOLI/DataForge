@@ -44,9 +44,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y sbt
 
-#      - name: Run tests
-#        working-directory: batch/silver
-#        run: sbt test
+      - name: Run tests
+        working-directory: batch/silver
+        run: sbt test
 
       - name: Package JAR
         working-directory: batch/silver
