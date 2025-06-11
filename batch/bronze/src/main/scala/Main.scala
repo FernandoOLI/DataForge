@@ -16,7 +16,6 @@ class KafkaDeltaPipeline(
       .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
       .getOrCreate()
   }
-
   def readFromKafka(spark: SparkSession): DataFrame = {
     spark.readStream
       .format("kafka")
