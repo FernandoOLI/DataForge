@@ -1,0 +1,17 @@
+FROM python:3.10-slim
+
+ENV DAGSTER_HOME=/opt/dagster/dagster_home/
+WORKDIR $DAGSTER_HOME
+
+# Atualiza o pip e instala dependências básicas
+RUN apt-get update && apt-get install -y build-essential && pip install --upgrade pip
+
+# Instala dependências do Dagster
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copia arquivos de configuração
+COPY dagster.yaml workspace.yaml my_pipeline.py ${DAGSTER_HOME}
+
+# Comando para rodar o GRPC server do user code
+CMD ["dagster", "api", "grpc"]
